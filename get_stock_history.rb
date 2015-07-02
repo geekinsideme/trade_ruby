@@ -12,7 +12,7 @@ ActiveRecord::Base.establish_connection(
   )
 
 def get_stock_history_and_store( code )
-  File::delete("tmp/stock_history.csv") if File::exists?("tmp/stock_history.csv")
+  File::delete("tmp/stock_history.csv") if File::exist?("tmp/stock_history.csv")
 
   (Date::today.year).downto(2007).each do |year|
     File.open("tmp/stock_history.csv", "a") do |saved_file|
@@ -22,7 +22,7 @@ def get_stock_history_and_store( code )
       end
     end
   end
-  puts "finished"
+  puts "getting history finished"
 
   puts "importing stock history to database ( #{code} ) ..."
   File.open("tmp/stock_history.csv","r",encoding: "SJIS") do |saved_file|
@@ -39,7 +39,7 @@ def get_stock_history_and_store( code )
       stock.save
     end
   end
-  puts "impot finished ( #{code} )"
+  puts "importing finished ( #{code} )"
 
   Issue.find_by(code: code).update tracking: true
 end
@@ -50,7 +50,7 @@ if ARGV.count == 0
   end
 else
   ARGV.each do |code|
-    if !Issue.find_by(code: code)
+    if ! Issue.exists?(code: code)
       puts "#{code} is not found in Issue"
       abort
     end
