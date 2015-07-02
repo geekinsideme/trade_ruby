@@ -1,8 +1,8 @@
 # A sample Gemfile
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem "pry"
-gem "byebug"
+gem 'pry'
+gem 'byebug'
 
-gem "activerecord"
-gem "sqlite3"
+gem 'activerecord'
+gem 'sqlite3'
