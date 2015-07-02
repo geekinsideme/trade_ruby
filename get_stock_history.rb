@@ -11,22 +11,20 @@ ActiveRecord::Base.establish_connection(
     "timeout" => "15000"
   )
 
-ARGV.each do |code|
-  if !Issue.find_by(code: code)
-    puts "#{code} is not found in Issue"
-    abort
-  end
-
+def get_stock_history_and_store( code )
   File::delete("tmp/stock_history.csv") if File::exists?("tmp/stock_history.csv")
 
   (Date::today.year).downto(2007).each do |year|
     File.open("tmp/stock_history.csv", "a") do |saved_file|
+      puts "getting stock history from k-db.com ( #{code} , #{year} ) ..."
       open("http://k-db.com/stocks/#{code}?year=#{year}&download=csv", "r") do |read_file|
         saved_file.write(read_file.read)
       end
     end
   end
+  puts "finished"
 
+  puts "importing stock history to database ( #{code} ) ..."
   File.open("tmp/stock_history.csv","r",encoding: "SJIS") do |saved_file|
     saved_file.each_line do |line|
       date,open,high,low,close,trading_volume,trading_value = line.split(",")
@@ -41,6 +39,22 @@ ARGV.each do |code|
       stock.save
     end
   end
+  puts "impot finished ( #{code} )"
 
   Issue.find_by(code: code).update tracking: true
 end
+
+if ARGV.count == 0
+  Issue.where(tracking: true).each do |issue|
+    get_stock_history_and_store issue.code
+  end
+else
+  ARGV.each do |code|
+    if !Issue.find_by(code: code)
+      puts "#{code} is not found in Issue"
+      abort
+    end
+    get_stock_history_and_store code
+  end
+end
+
