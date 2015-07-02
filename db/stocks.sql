@@ -19,6 +19,7 @@ CREATE INDEX codedateindexonstocks ON stocks(code,date);
 --   追加カラム（株価指標）
 ALTER TABLE stocks ADD COLUMN ma5 NUMERIC; -- 5日移動平均
 ALTER TABLE stocks ADD COLUMN ma25 NUMERIC; -- 25日移動平均
+ALTER TABLE stocks ADD COLUMN ma75 NUMERIC; -- 75日移動平均
 
 -- 銘柄情報テーブル
 CREATE TABLE IF NOT EXISTS issues (
@@ -30,8 +31,10 @@ CREATE TABLE IF NOT EXISTS issues (
   industry TEXT, -- 業種
   unit NUMERIC, -- 単元株式数
   info TEXT, -- 付帯情報
+  tracking BOOLEAN, -- 更新フラグ
   created_at,
   updated_at
 );
 -- 　インデックス定義
 CREATE INDEX codeindexonissues ON issues(code);
+CREATE INDEX trackingindexonissues ON issues(tracking);

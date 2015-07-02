@@ -5,6 +5,12 @@ require "date"
 require_relative "models/issue.rb"
 require_relative "models/stock.rb"
 
+ActiveRecord::Base.establish_connection(
+    "adapter" => "sqlite3",
+    "database" => "db/stocks.sqlite3",
+    "timeout" => "15000"
+  )
+
 ARGV.each do |code|
   if !Issue.find_by(code: code)
     puts "#{code} is not found in Issue"
@@ -35,4 +41,6 @@ ARGV.each do |code|
       stock.save
     end
   end
+
+  Issue.find_by(code: code).update tracking: true
 end
