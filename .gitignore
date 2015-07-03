@@ -1,3 +1,6 @@
+
+.rubocop_todo.yml
+
 ### https://raw.github.com/github/gitignore/e0df63986afdb4da49071873c054ef4288e6f4ed/ruby.gitignore
 
 *.gem
@@ -101,7 +104,8 @@ sftp-config.json
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*

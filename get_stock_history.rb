@@ -1,4 +1,3 @@
-require 'csv'
 require 'open-uri'
 require 'date'
 
