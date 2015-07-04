@@ -4,12 +4,6 @@ require 'date'
 require_relative 'models/issue.rb'
 require_relative 'models/stock.rb'
 
-ActiveRecord::Base.establish_connection(
-  'adapter' => 'sqlite3',
-  'database' => 'db/stocks.sqlite3',
-  'timeout' => '15000'
-)
-
 def get_current_stock(date)
   File.delete('tmp/current_stock.csv') if File.exist?('tmp/current_stock.csv')
 
@@ -21,7 +15,7 @@ def get_current_stock(date)
   end
 
   File.open('tmp/current_stock.csv', 'r', encoding: 'SJIS').each_line do |line|
-    line = line.encode('UTF-8', 'Shift_JIS').strip.gsub(/年/, '-').gsub(/月/, '-').gsub(/日/, '')
+    line = line.encode('UTF-8', 'SJIS').strip.gsub(/年/, '-').gsub(/月/, '-').gsub(/日/, '')
     if Date.parse(line) == Date.parse(date)
       break
     else
@@ -52,6 +46,7 @@ end
 if ARGV.count == 0
   max_date = Stock.maximum(:date).to_s
   (max_date..Date.today.to_s).each do |date|
+    next if date == max_date
     date_ary = date.split(/-/)
     if Date.valid_date?(date_ary[0].to_i, date_ary[1].to_i, date_ary[2].to_i)
       get_current_stock date

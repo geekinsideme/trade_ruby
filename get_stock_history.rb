@@ -4,12 +4,6 @@ require 'date'
 require_relative 'models/issue.rb'
 require_relative 'models/stock.rb'
 
-ActiveRecord::Base.establish_connection(
-  'adapter' => 'sqlite3',
-  'database' => 'db/stocks.sqlite3',
-  'timeout' => '15000'
-)
-
 def get_stock_history_and_store(code)
   File.delete('tmp/stock_history.csv') if File.exist?('tmp/stock_history.csv')
 
