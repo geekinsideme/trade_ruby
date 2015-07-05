@@ -1,5 +1,5 @@
 Metrics/LineLength:
-  Max: 120
+  Max: 180
 
 Metrics/MethodLength:
   Max: 50
@@ -12,4 +12,13 @@ Style/AsciiComments:
 
 Metrics/AbcSize:
   Max: 50
+
+Style/FormatString:
+  EnforcedStyle: percent
+
+Style/Documentation:
+  Enabled: false
+
+Style/Next:
+  Enabled: false
 

@@ -1,0 +1,19 @@
+{
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"db/stocks.sqlite3",
+				"db/trades.sqlite3"
+			],
+			"folder_exclude_patterns":
+			[
+				".bundle",
+				"vendor",
+				"bin"
+			],
+			"path": "."
+		}
+	]
+}
