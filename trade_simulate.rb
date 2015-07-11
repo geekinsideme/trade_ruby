@@ -16,6 +16,11 @@ Trade.where(label: :simulating).update_all(label: :simulated)
 
 
 ruleset = eval(File.open("ruleset.rb").read)
+puts "---------- ルール --------------"
+ruleset.each do |rule|
+  p rule
+end
+
 
 catch :end_of_simulation do
   loop do
@@ -33,51 +38,40 @@ catch :end_of_simulation do
       tick = 0
       fee = 0
 
-      # 前日までの注文処理（エントリ）
+      # 前日までの注文処理（仕掛け）
       Trade.where(label: :simulating).where(code: code).where(status: :entry).order(created_at: :asc).each do |trade|
-        executed = false
+        execution_reason = nil
         case trade.trade_type
         when :spot, :margin_buying
-          if trade.entry_type == :market
-            execution_price = stocks[0].open
-            executed = true
-          end
-          if trade.entry_type == :stop || trade.entry_type == :limit_and_stop
-            if trade.entry_price > stocks[0].low
-              execution_price = trade.entry_price + tick
-              executed = true
-            end
-          end
-          if trade.entry_type == :limit || trade.entry_type == :limit_and_stop
-            if trade.entry_price < stocks[0].high
-              execution_price = trade.entry_price
-              executed = true
-            end
+          case trade.entry_type
+          when :market
+            execution_price,execution_reason = Stock.buy nil,nil,stocks[0]
+          when :limit
+            execution_price,execution_reason = Stock.buy trade.entry_limit_price,nil,stocks[0]
+          when :stop
+            execution_price,execution_reason = Stock.buy nil,trade.entry_stop_price,stocks[0]
+          when :limit_and_stop
+            execution_price,execution_reason = Stock.buy trade.entry_limit_price,trade.entry_stop_price,stocks[0]
           end
         when :margin_selling
-          if trade.entry_type == :market
-            execution_price = stocks[0].open
-            executed = true
-          end
-          if trade.entry_type == :stop || trade.entry_type == :limit_and_stop
-            if trade.entry_price < stocks[0].high
-              execution_price = trade.entry_price - tick
-              executed = true
-            end
-          end
-          if trade.entry_type == :limit || trade.entry_type == :limit_and_stop
-            if trade.entry_price > stocks[0].low
-              execution_price = trade.entry_price
-              executed = true
-            end
+          case trade.entry_type
+          when :market
+            execution_price,execution_reason = Stock.sell nil,nil,stocks[0]
+          when :limit
+            execution_price,execution_reason = Stock.sell trade.entry_limit_price,nil,stocks[0]
+          when :stop
+            execution_price,execution_reason = Stock.sell nil,trade.entry_stop_price,stocks[0]
+          when :limit_and_stop
+            execution_price,execution_reason = Stock.sell trade.entry_limit_price,trade.entry_stop_price,stocks[0]
           end
           fee = -fee
         end
-        if executed
+        if execution_reason
           # 注文確定
           trade.execution_date = stocks[0].date
           trade.execution_size = trade.entry_size
           trade.execution_price = execution_price
+          trade.execution_reason = execution_reason
           trade.execution_fee = fee
           trade.execution_amount = trade.entry_size * execution_price + fee
           trade.status = :executed
@@ -93,56 +87,45 @@ catch :end_of_simulation do
         end
       end
 
-      # 手仕舞い注文
+      # 前日までの注文処理（手仕舞い）
       Trade.where(label: :simulating).where(code: code).where(status: :exit).order(created_at: :asc).each do |trade|
-        executed = false
+        execution_reason = nil
         case trade.trade_type
         when :spot, :margin_buying
-          if trade.exit_type == :market
-            execution_price = stocks[0].open
-            executed = true
-          end
-          if trade.exit_type == :stop || trade.exit_type == :limit_and_stop
-            if trade.exit_price > stocks[0].low
-              execution_price = stocks[0].low
-              executed = true
-            end
-          end
-          if trade.exit_type == :limit || trade.exit_type == :limit_and_stop
-            if trade.exit_price < stocks[0].high
-              execution_price = trade.exit_price
-              executed = true
-            end
+          case trade.exit_type
+          when :market
+            execution_price,execution_reason = Stock.sell nil,nil,stocks[0]
+          when :limit
+            execution_price,execution_reason = Stock.sell trade.exit_limit_price,nil,stocks[0]
+          when :stop
+            execution_price,execution_reason = Stock.sell nil,trade.exit_stop_price,stocks[0]
+          when :limit_and_stop
+            execution_price,execution_reason = Stock.sell trade.exit_limit_price,trade.exit_stop_price,stocks[0]
           end
         when :margin_selling
-          if trade.exit_type == :market
-            execution_price = stocks[0].open
-            executed = true
-          end
-          if trade.exit_type == :stop || trade.exit_type == :limit_and_stop
-            if trade.exit_price < stocks[0].high
-              execution_price = stocks[0].high
-              executed = true
-            end
-          end
-          if trade.exit_type == :limit || trade.exit_type == :limit_and_stop
-            if trade.exit_price > stocks[0].low
-              execution_price = trade.exit_price
-              executed = true
-            end
+          case trade.exit_type
+          when :market
+            execution_price,execution_reason = Stock.buy nil,nil,stocks[0]
+          when :limit
+            execution_price,execution_reason = Stock.buy trade.exit_limit_price,nil,stocks[0]
+          when :stop
+            execution_price,execution_reason = Stock.buy nil,trade.exit_stop_price,stocks[0]
+          when :limit_and_stop
+            execution_price,execution_reason = Stock.buy trade.exit_limit_price,trade.exit_stop_price,stocks[0]
           end
           fee = -fee
         end
-        if !executed && trade.entry_expiry <= today
+
+        if !execution_reason && trade.exit_expiry < today
           # puts '強制執行'
           execution_price = stocks[0].open
-          executed = true
+          execution_reason = "expired"
         end
-
-        if executed
+        if execution_reason
           # 注文確定
           trade.liquidation_date = stocks[0].date
           trade.liquidation_price = execution_price
+          trade.liquidation_reason = execution_reason
           trade.liquidation_fee = fee
           trade.liquidation_amount = trade.entry_size * execution_price - fee
           trade.valuation_price = trade.trade_type == :margin_selling ? trade.execution_price - execution_price : execution_price - trade.execution_price
@@ -161,19 +144,27 @@ catch :end_of_simulation do
         entry = {}
         # 買いルール適用
         ruleset.each do |rule|
-          next unless rule[:klass] == "LongEntryRule"
+          next unless rule[:klass] == :LongEntryRule
           instance = LongEntryRule.new rule.merge({today: today,next_day: next_day})
           if entry = instance.send(rule[:rule], new_trade, stocks, issue)
+            entry.merge!(entry_rule: rule[:rule])
             break
           else
             entry = {}
           end
         end
+        if entry.size > 0
+          entry.merge!(label: :simulating, code: code, status: :entry, entry_date: today)
+          new_trade.update entry
+          # puts '仕掛け'
+          # p new_trade
+        end
         # 売りルール適用
         ruleset.each do |rule|
-          next unless rule[:klass] == "ShortEntryRule"
+          next unless rule[:klass] == :ShortEntryRule
           instance = ShortEntryRule.new rule.merge({today: today,next_day: next_day})
           if entry = instance.send(rule[:rule], new_trade, stocks, issue)
+            entry.merge!(entry_rule: rule[:rule])
             break
           else
             entry = {}
@@ -189,30 +180,30 @@ catch :end_of_simulation do
       # 手仕舞い
       Trade.where(label: :simulating).where(code: code).where(status: [:executed, :holding, :exit]).each do |trade|
         # ルール適用
-        exit = { exit_expiry: last_day }
+        exit = { exit_expiry: last_day-1 }
         case trade.trade_type
         when :spot, :margin_buying
           ruleset.each do |rule|
-            next unless rule[:klass] == "LongExitRule"
+            next unless rule[:klass] == :LongExitRule
             instance = LongExitRule.new rule.merge({today: today,next_day: next_day})
             if exit = instance.send(rule[:rule], trade, stocks, issue)
+              exit.merge!(exit_rule: rule[:rule])
               break
-            else
-              exit = { exit_expiry: last_day }
             end
           end
         when :margin_selling
           ruleset.each do |rule|
-            next unless rule[:klass] == "ShortExitRule"
+            next unless rule[:klass] == :ShortExitRule
             instance = ShortExitRule.new rule.merge({today: today,next_day: next_day})
             if exit = instance.send(rule[:rule], trade, stocks, issue)
+              exit.merge!(exit_rule: rule[:rule])
               break
-            else
-              exit = { exit_expiry: last_day }
             end
           end
         end
-        exit.merge!(status: :exit, exit_date: next_day)
+        exit[:exit_expiry] = last_day-1 if exit[:exit_expiry] > last_day-1
+        exit.merge!(status: :exit)
+        exit[:days] = trade.days ? trade.days + 1 : 1
         exit[:last_price] = stocks[0].close
         exit[:the_day_before] = stocks[0].close - stocks[1].close
         exit[:valuation_price] = trade.trade_type == :margin_selling ? trade.execution_price - stocks[0].close : stocks[0].close - trade.execution_price
@@ -227,30 +218,5 @@ catch :end_of_simulation do
     # 日次評価
   end # 日次
 end
+Trade.report
 
-puts "---------- ルール --------------"
-ruleset.each do |rule|
-  p rule
-end
-puts "---------- 取引明細 ------------"
-Trade.where(label: :simulating).where(status: :liquidate).each do |trade|
-  print trade.code
-  print trade.trade_type == :margin_selling ? ' 売' : ' 買'
-  print "#{'%7.1f' % trade.execution_price}(#{'%7.1f' % trade.exit_price},#{'%7.1f' % trade.exit_price2})->#{'%7.1f' % trade.liquidation_price}"
-  print " :#{'%7.1f' % trade.valuation_price}"
-  print " *#{'%5.0f' % trade.execution_size}"
-  print " =#{'%7.0f' % trade.valuation_amount}"
-  puts " #{'%6.2f' % trade.earnings_ratio}%"
-end
-
-puts '---------- 最終評価 ------------'
-# 最終評価
-plus_trade_count = Trade.where(label: :simulating).where(status: :liquidate).where('valuation_price > 0').count
-minus_trade_count = Trade.where(label: :simulating).where(status: :liquidate).where('valuation_price <=0').count
-plus_trade_amount = Trade.where(label: :simulating).where(status: :liquidate).where('valuation_price > 0').sum(:valuation_amount)
-minus_trade_amount = Trade.where(label: :simulating).where(status: :liquidate).where('valuation_price <=0').sum(:valuation_amount)
-average = Trade.where(label: :simulating).where(status: :liquidate).average(:earnings_ratio)
-
-puts "勝ち #{'%3d' % plus_trade_count}回 #{'%10.0f' % plus_trade_amount}円"
-puts "負け #{'%3d' % minus_trade_count}回 #{'%10.0f' % minus_trade_amount}円  勝率 #{'%3.2f' % (plus_trade_count * 1.0 / (plus_trade_count + minus_trade_count) * 100.0)}%"
-puts "合計損益   #{'%10.0f' % (plus_trade_amount + minus_trade_amount)}円  平均損益率 #{'%7.2f' % average}%"

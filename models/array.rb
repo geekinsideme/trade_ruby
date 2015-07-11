@@ -10,5 +10,6 @@ class Array
   def average
     sum.to_f / size
   end
+
   include Indicator
 end
