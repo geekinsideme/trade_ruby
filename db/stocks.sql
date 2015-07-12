@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS issues (
   industry TEXT, -- 業種
   unit REAL, -- 単元株式数
   info TEXT, -- 付帯情報
+  topix100 BOOLEAN, -- TOPIX100構成銘柄
   tracking BOOLEAN, -- 更新フラグ
   created_at,
   updated_at

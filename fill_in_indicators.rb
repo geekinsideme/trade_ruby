@@ -1,6 +1,7 @@
 require_relative 'models/issue.rb'
 require_relative 'models/stock.rb'
 require_relative 'models/array.rb'
+require_relative 'models/indicator.rb'
 
 Issue.where(tracking: true).each do |issue|
   saved_stocks = Stock.where(code: issue.code).order(date: :desc).take(10_000)

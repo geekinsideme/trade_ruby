@@ -1,0 +1,478 @@
+Inspecting 17 files
+C.CCCCCCCCCCCCC.C
+
+Offenses:
+
+fill_in_indicators.rb:10:81: C: Line is too long. [116/80]
+    next if %w(id date code open high low close trading_volume trading_value created_at updated_at).include?(column)
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fill_in_indicators.rb:15:37: C: Use only ascii symbols in comments.
+      break if stocks[0][indicator] # 計算済み
+                                    ^^^^^^
+get_stock_history.rb:7:1: C: Assignment Branch Condition size for get_stock_history_and_store is too high. [29.48/15]
+def get_stock_history_and_store(code)
+^^^
+get_stock_history.rb:7:1: C: Method has too many lines. [27/10]
+def get_stock_history_and_store(code)
+^^^
+get_stock_history.rb:13:81: C: Line is too long. [90/80]
+      open("http://k-db.com/stocks/#{code}?year=#{year}&download=csv", 'r') do |read_file|
+                                                                                ^^^^^^^^^^
+get_stock_history.rb:23:81: C: Line is too long. [83/80]
+      date, open, high, low, close, trading_volume, trading_value = line.split(',')
+                                                                                ^^^
+import_issues_csv.rb:4:81: C: Line is too long. [84/80]
+CSV.open('db/stocks.csv', 'r', headers: :first_row, encoding: 'UTF-8').each do |row|
+                                                                                ^^^^
+list_stock_history.rb:6:81: C: Line is too long. [93/80]
+Stock.where(code: ARGV[0]).where('? <= date AND date <= ?', from_date, to_date).each do |row|
+                                                                                ^^^^^^^^^^^^^
+list_stock_history.rb:10:81: C: Line is too long. [98/80]
+      next if %w(id date code trading_volume trading_value created_at updated_at).include?(column)
+                                                                                ^^^^^^^^^^^^^^^^^^
+list_stock_history.rb:11:23: C: Favor format over String#%.
+      print ' %-6.6s' % column
+                      ^
+list_stock_history.rb:17:81: C: Line is too long. [96/80]
+    next if %w(id date code trading_volume trading_value created_at updated_at).include?(column)
+                                                                                ^^^^^^^^^^^^^^^^
+list_stock_history.rb:18:20: C: Favor format over String#%.
+    print(('%7.1f' % row[column]).to_s)
+                   ^
+ruleset.rb:4:81: C: Line is too long. [99/80]
+  { klass: :LongExitRule, rule: :by_execution_price, day: 14, limit_percent: 10, stop_percent: 2 },
+                                                                                ^^^^^^^^^^^^^^^^^^^
+ruleset.rb:7:81: C: Line is too long. [100/80]
+  { klass: :ShortExitRule, rule: :by_execution_price, day: 14, limit_percent: 10, stop_percent: 2 },
+                                                                                ^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:11:81: C: Line is too long. [96/80]
+  saved_stocks_store[issue.code] = Stock.where(code: issue.code).order(date: :desc).take(10_000)
+                                                                                ^^^^^^^^^^^^^^^^
+trade_simulate.rb:39:7: C: Use only ascii symbols in comments.
+      # 前日までの注文処理（仕掛け）
+      ^^^^^^^^^^^^^^^^
+trade_simulate.rb:40:81: C: Line is too long. [117/80]
+      Trade.where(label: :simulating).where(code: code).where(status: :entry).order(created_at: :asc).each do |trade|
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:48:81: C: Line is too long. [97/80]
+            execution_price, execution_reason = Stock.buy trade.entry_limit_price, nil, stocks[0]
+                                                                                ^^^^^^^^^^^^^^^^^
+trade_simulate.rb:50:81: C: Line is too long. [96/80]
+            execution_price, execution_reason = Stock.buy nil, trade.entry_stop_price, stocks[0]
+                                                                                ^^^^^^^^^^^^^^^^
+trade_simulate.rb:52:81: C: Line is too long. [116/80]
+            execution_price, execution_reason = Stock.buy trade.entry_limit_price, trade.entry_stop_price, stocks[0]
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:59:81: C: Line is too long. [98/80]
+            execution_price, execution_reason = Stock.sell trade.entry_limit_price, nil, stocks[0]
+                                                                                ^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:61:81: C: Line is too long. [97/80]
+            execution_price, execution_reason = Stock.sell nil, trade.entry_stop_price, stocks[0]
+                                                                                ^^^^^^^^^^^^^^^^^
+trade_simulate.rb:63:81: C: Line is too long. [117/80]
+            execution_price, execution_reason = Stock.sell trade.entry_limit_price, trade.entry_stop_price, stocks[0]
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:68:11: C: Use only ascii symbols in comments.
+          # 注文確定
+          ^^^^^^
+trade_simulate.rb:78:11: C: Use only ascii symbols in comments.
+          # 注文失効
+          ^^^^^^
+trade_simulate.rb:84:7: C: Use only ascii symbols in comments.
+      # 前日までの注文処理（手仕舞い）
+      ^^^^^^^^^^^^^^^^^
+trade_simulate.rb:85:81: C: Line is too long. [116/80]
+      Trade.where(label: :simulating).where(code: code).where(status: :exit).order(created_at: :asc).each do |trade|
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:85:102: C: Use next to skip iteration.
+      Trade.where(label: :simulating).where(code: code).where(status: :exit).order(created_at: :asc).each do |trade|
+                                                                                                     ^^^^
+trade_simulate.rb:93:81: C: Line is too long. [97/80]
+            execution_price, execution_reason = Stock.sell trade.exit_limit_price, nil, stocks[0]
+                                                                                ^^^^^^^^^^^^^^^^^
+trade_simulate.rb:95:81: C: Line is too long. [96/80]
+            execution_price, execution_reason = Stock.sell nil, trade.exit_stop_price, stocks[0]
+                                                                                ^^^^^^^^^^^^^^^^
+trade_simulate.rb:97:81: C: Line is too long. [115/80]
+            execution_price, execution_reason = Stock.sell trade.exit_limit_price, trade.exit_stop_price, stocks[0]
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:104:81: C: Line is too long. [96/80]
+            execution_price, execution_reason = Stock.buy trade.exit_limit_price, nil, stocks[0]
+                                                                                ^^^^^^^^^^^^^^^^
+trade_simulate.rb:106:81: C: Line is too long. [95/80]
+            execution_price, execution_reason = Stock.buy nil, trade.exit_stop_price, stocks[0]
+                                                                                ^^^^^^^^^^^^^^^
+trade_simulate.rb:108:81: C: Line is too long. [114/80]
+            execution_price, execution_reason = Stock.buy trade.exit_limit_price, trade.exit_stop_price, stocks[0]
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:114:11: C: Use only ascii symbols in comments.
+          # puts '強制執行'
+          ^^^^^^^^^^^^^
+trade_simulate.rb:119:11: C: Use only ascii symbols in comments.
+          # 注文確定
+          ^^^^^^
+trade_simulate.rb:125:81: C: Line is too long. [153/80]
+          trade.valuation_price = trade.trade_type == :margin_selling ? trade.execution_price - execution_price : execution_price - trade.execution_price
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:126:81: C: Line is too long. [81/80]
+          trade.valuation_amount = trade.valuation_price * trade.entry_size - fee
+                                                                                ^
+trade_simulate.rb:127:81: C: Line is too long. [99/80]
+          trade.earnings_ratio = (trade.valuation_amount / trade.execution_amount * 100.0).round(2)
+                                                                                ^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:130:11: C: Use only ascii symbols in comments.
+          # puts '手仕舞い確定'
+          ^^^^^^^^^^^^^^^
+trade_simulate.rb:135:7: C: Use only ascii symbols in comments.
+      # 仕掛け　（すでにこの銘柄に仕掛けていれば、あらたに仕掛けない）
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:136:81: C: Line is too long. [122/80]
+      unless Trade.where(label: :simulating).where(code: code).where(status: [:entry, :executed, :holding, :exit]).exists?
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:138:9: C: Use only ascii symbols in comments.
+        # 買いルール適用
+        ^^^^^^^^^
+trade_simulate.rb:139:17: C: Use next to skip iteration.
+        ruleset.each do |rule|
+                ^^^^
+trade_simulate.rb:141:81: C: Line is too long. [83/80]
+          instance = LongEntryRule.new rule.merge(today: today, next_day: next_day)
+                                                                                ^^^
+trade_simulate.rb:144:81: C: Line is too long. [91/80]
+            entry.merge!(label: :simulating, code: code, status: :entry, entry_date: today)
+                                                                                ^^^^^^^^^^^
+trade_simulate.rb:145:81: C: Line is too long. [110/80]
+            entry[:entry_limit_price] = issue.truncate(entry[:entry_limit_price]) if entry[:entry_limit_price]
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:146:81: C: Line is too long. [103/80]
+            entry[:entry_stop_price] = issue.ceil(entry[:entry_stop_price]) if entry[:entry_stop_price]
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:151:9: C: Use only ascii symbols in comments.
+        # 売りルール適用
+        ^^^^^^^^^
+trade_simulate.rb:152:17: C: Use next to skip iteration.
+        ruleset.each do |rule|
+                ^^^^
+trade_simulate.rb:154:81: C: Line is too long. [84/80]
+          instance = ShortEntryRule.new rule.merge(today: today, next_day: next_day)
+                                                                                ^^^^
+trade_simulate.rb:157:81: C: Line is too long. [91/80]
+            entry.merge!(label: :simulating, code: code, status: :entry, entry_date: today)
+                                                                                ^^^^^^^^^^^
+trade_simulate.rb:158:81: C: Line is too long. [106/80]
+            entry[:entry_limit_price] = issue.ceil(entry[:entry_limit_price]) if entry[:entry_limit_price]
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:159:81: C: Line is too long. [107/80]
+            entry[:entry_stop_price] = issue.truncate(entry[:entry_stop_price]) if entry[:entry_stop_price]
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:165:7: C: Use only ascii symbols in comments.
+      # 手仕舞い
+      ^^^^^^
+trade_simulate.rb:166:81: C: Line is too long. [115/80]
+      Trade.where(label: :simulating).where(code: code).where(status: [:executed, :holding, :exit]).each do |trade|
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:167:9: C: Use only ascii symbols in comments.
+        # ルール適用
+        ^^^^^^^
+trade_simulate.rb:171:19: C: Use next to skip iteration.
+          ruleset.each do |rule|
+                  ^^^^
+trade_simulate.rb:173:81: C: Line is too long. [84/80]
+            instance = LongExitRule.new rule.merge(today: today, next_day: next_day)
+                                                                                ^^^^
+trade_simulate.rb:177:81: C: Line is too long. [102/80]
+              exit[:exit_limit_price] = issue.ceil(exit[:exit_limit_price]) if exit[:exit_limit_price]
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:178:81: C: Line is too long. [103/80]
+              exit[:exit_stop_price] = issue.truncate(exit[:exit_stop_price]) if exit[:exit_stop_price]
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:183:19: C: Use next to skip iteration.
+          ruleset.each do |rule|
+                  ^^^^
+trade_simulate.rb:185:81: C: Line is too long. [85/80]
+            instance = ShortExitRule.new rule.merge(today: today, next_day: next_day)
+                                                                                ^^^^^
+trade_simulate.rb:189:81: C: Line is too long. [106/80]
+              exit[:exit_limit_price] = issue.truncate(exit[:exit_limit_price]) if exit[:exit_limit_price]
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:190:81: C: Line is too long. [99/80]
+              exit[:exit_stop_price] = issue.ceil(exit[:exit_stop_price]) if exit[:exit_stop_price]
+                                                                                ^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:202:81: C: Line is too long. [152/80]
+        exit[:valuation_price] = trade.trade_type == :margin_selling ? trade.execution_price - stocks[0].close : stocks[0].close - trade.execution_price
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trade_simulate.rb:203:81: C: Line is too long. [81/80]
+        exit[:valuation_amount] = exit[:valuation_price] * trade.entry_size - fee
+                                                                                ^
+trade_simulate.rb:206:7: C: Use only ascii symbols in comments.
+      # 銘柄評価
+      ^^^^^^
+trade_simulate.rb:207:9: C: Use only ascii symbols in comments.
+    end # 銘柄
+        ^^^^
+trade_simulate.rb:209:5: C: Use only ascii symbols in comments.
+    # 仕掛けフィルタリング
+    ^^^^^^^^^^^^
+trade_simulate.rb:210:5: C: Use only ascii symbols in comments.
+    # 手仕舞いフィルタリング
+    ^^^^^^^^^^^^^
+trade_simulate.rb:211:5: C: Use only ascii symbols in comments.
+    # オーダー発行
+    ^^^^^^^^
+trade_simulate.rb:212:5: C: Use only ascii symbols in comments.
+    # 日次評価
+    ^^^^^^
+trade_simulate.rb:213:7: C: Use only ascii symbols in comments.
+  end # 日次
+      ^^^^
+up_to_date_stocks.rb:7:1: C: Assignment Branch Condition size for get_current_stock is too high. [34.77/15]
+def get_current_stock(date)
+^^^
+up_to_date_stocks.rb:7:1: C: Method has too many lines. [32/10]
+def get_current_stock(date)
+^^^
+up_to_date_stocks.rb:18:81: C: Line is too long. [89/80]
+    line = line.encode('UTF-8', 'SJIS').strip.gsub(/年/, '-').gsub(/月/, '-').gsub(/日/, '')
+                                                                                ^^^^^^^^^
+up_to_date_stocks.rb:29:7: C: Use only ascii symbols in comments.
+      # コード,市場,銘柄名,業種,始値,高値,安値,終値,出来高,売買代金
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+up_to_date_stocks.rb:30:81: C: Line is too long. [111/80]
+      code, _market, _issue, _industry, open, high, low, close, trading_volume, trading_value = line.split(',')
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+models/array.rb:1:1: C: Missing top-level class documentation comment.
+class Array
+^^^^^
+models/array.rb:2:3: C: Use only ascii symbols in comments.
+  # 合計
+  ^^^^
+models/array.rb:7:3: C: Use only ascii symbols in comments.
+  # 平均
+  ^^^^
+models/indicator.rb:1:1: C: Missing top-level module documentation comment.
+module Indicator
+^^^^^^
+models/indicator.rb:15:1: C: Missing top-level class documentation comment.
+class Array
+^^^^^
+models/issue.rb:4:1: C: Missing top-level class documentation comment.
+class Issue < ActiveRecord::Base
+^^^^^
+models/issue.rb:11:81: C: Line is too long. [97/80]
+  # rubocop:disable Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
+                                                                                ^^^^^^^^^^^^^^^^^
+models/issue.rb:12:3: C: Assignment Branch Condition size for tick is too high. [33.94/15]
+  def tick(price)
+  ^^^
+models/issue.rb:66:3: C: Use only ascii symbols in comments.
+  # 半端な数字を上の呼び値に切り上げ
+  ^^^^^^^^^^^^^^^^^^
+models/issue.rb:67:3: C: Use only ascii symbols in comments.
+  # 半端でなければ何もしない
+  ^^^^^^^^^^^^^^
+models/issue.rb:77:3: C: Use only ascii symbols in comments.
+  # 半端な数字を下の呼び値に切り下げ
+  ^^^^^^^^^^^^^^^^^^
+models/issue.rb:78:3: C: Use only ascii symbols in comments.
+  # 半端でなければ何もしない
+  ^^^^^^^^^^^^^^
+models/issue.rb:83:3: C: Use only ascii symbols in comments.
+  # 何ティックか足す
+  ^^^^^^^^^^
+models/issue.rb:89:3: C: Use only ascii symbols in comments.
+  # 何ティックか引く
+  ^^^^^^^^^^
+models/rule.rb:1:1: C: Missing top-level class documentation comment.
+class Rule
+^^^^^
+models/stock.rb:4:1: C: Missing top-level class documentation comment.
+class Stock < ActiveRecord::Base
+^^^^^
+models/stock.rb:12:3: C: Use only ascii symbols in comments.
+  # 買いオペレーション
+  ^^^^^^^^^^^
+models/stock.rb:13:3: C: Assignment Branch Condition size for buy is too high. [22.47/15]
+  def self.buy(limit, stop, stock)
+  ^^^
+models/stock.rb:13:3: C: Method has too many lines. [20/10]
+  def self.buy(limit, stop, stock)
+  ^^^
+models/stock.rb:15:7: C: Use only ascii symbols in comments.
+      # 成り行き
+      ^^^^^^
+models/stock.rb:27:7: C: Use only ascii symbols in comments.
+      # 指値　（指定価格より安ければ約定）
+      ^^^^^^^^^^^^^^^^^^^
+models/stock.rb:33:7: C: Use only ascii symbols in comments.
+      # 逆指値　（指定価格より高ければ、成り行き）
+      ^^^^^^^^^^^^^^^^^^^^^^^
+models/stock.rb:38:3: C: Use only ascii symbols in comments.
+  # 売りオペレーション
+  ^^^^^^^^^^^
+models/stock.rb:39:3: C: Assignment Branch Condition size for sell is too high. [22.47/15]
+  def self.sell(limit, stop, stock)
+  ^^^
+models/stock.rb:39:3: C: Method has too many lines. [20/10]
+  def self.sell(limit, stop, stock)
+  ^^^
+models/stock.rb:41:7: C: Use only ascii symbols in comments.
+      # 成り行き
+      ^^^^^^
+models/stock.rb:53:7: C: Use only ascii symbols in comments.
+      # 指値　（指定価格より高ければ約定）
+      ^^^^^^^^^^^^^^^^^^^
+models/stock.rb:59:7: C: Use only ascii symbols in comments.
+      # 逆指値　（指定価格より安ければ、成り行き）
+      ^^^^^^^^^^^^^^^^^^^^^^^
+models/trade.rb:4:1: C: Missing top-level class documentation comment.
+class Trade < ActiveRecord::Base
+^^^^^
+models/trade.rb:31:3: C: Method has too many lines. [22/10]
+  def self.report
+  ^^^
+models/trade.rb:34:7: C: Use only ascii symbols in comments.
+      # 9984-T 売 2010.0( 1809.0, 2050.2)-> 2045.0 :  -35.0 *  100 =  -3500  -1.74%
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+models/trade.rb:34:81: C: Line is too long. [82/80]
+      # 9984-T 売 2010.0( 1809.0, 2050.2)-> 2045.0 :  -35.0 *  100 =  -3500  -1.74%
+                                                                                ^^
+models/trade.rb:37:24: C: Favor format over String#%.
+      print "#{'%7.1f' % trade.execution_price}(#{'%7.1f' % trade.exit_limit_price},#{'%7.1f' % trade.exit_stop_price})->#{'%7.1f' % trade.liquidation_price}"
+                       ^
+models/trade.rb:37:59: C: Favor format over String#%.
+      print "#{'%7.1f' % trade.execution_price}(#{'%7.1f' % trade.exit_limit_price},#{'%7.1f' % trade.exit_stop_price})->#{'%7.1f' % trade.liquidation_price}"
+                                                          ^
+models/trade.rb:37:81: C: Line is too long. [158/80]
+      print "#{'%7.1f' % trade.execution_price}(#{'%7.1f' % trade.exit_limit_price},#{'%7.1f' % trade.exit_stop_price})->#{'%7.1f' % trade.liquidation_price}"
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+models/trade.rb:37:95: C: Favor format over String#%.
+      print "#{'%7.1f' % trade.execution_price}(#{'%7.1f' % trade.exit_limit_price},#{'%7.1f' % trade.exit_stop_price})->#{'%7.1f' % trade.liquidation_price}"
+                                                                                              ^
+models/trade.rb:37:132: C: Favor format over String#%.
+      print "#{'%7.1f' % trade.execution_price}(#{'%7.1f' % trade.exit_limit_price},#{'%7.1f' % trade.exit_stop_price})->#{'%7.1f' % trade.liquidation_price}"
+                                                                                                                                   ^
+models/trade.rb:38:26: C: Favor format over String#%.
+      print " :#{'%7.1f' % trade.valuation_price}"
+                         ^
+models/trade.rb:39:26: C: Favor format over String#%.
+      print " *#{'%5.0f' % trade.execution_size}"
+                         ^
+models/trade.rb:40:26: C: Favor format over String#%.
+      print " =#{'%7.0f' % trade.valuation_amount}"
+                         ^
+models/trade.rb:41:24: C: Favor format over String#%.
+      puts " #{'%6.2f' % trade.earnings_ratio}% #{'%2.0f' % trade.days}d"
+                       ^
+models/trade.rb:41:59: C: Favor format over String#%.
+      puts " #{'%6.2f' % trade.earnings_ratio}% #{'%2.0f' % trade.days}d"
+                                                          ^
+models/trade.rb:42:33: C: Favor format over String#%.
+      print "          #{'%10s' % trade.execution_date.to_s} #{'%-14.14s' % trade.entry_rule} #{'%10s' % trade.liquidation_date.to_s} #{'%-14.14s' % trade.exit_rule}"
+                                ^
+models/trade.rb:42:75: C: Favor format over String#%.
+      print "          #{'%10s' % trade.execution_date.to_s} #{'%-14.14s' % trade.entry_rule} #{'%10s' % trade.liquidation_date.to_s} #{'%-14.14s' % trade.exit_rule}"
+                                                                          ^
+models/trade.rb:42:81: C: Line is too long. [166/80]
+      print "          #{'%10s' % trade.execution_date.to_s} #{'%-14.14s' % trade.entry_rule} #{'%10s' % trade.liquidation_date.to_s} #{'%-14.14s' % trade.exit_rule}"
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+models/trade.rb:42:104: C: Favor format over String#%.
+      print "          #{'%10s' % trade.execution_date.to_s} #{'%-14.14s' % trade.entry_rule} #{'%10s' % trade.liquidation_date.to_s} #{'%-14.14s' % trade.exit_rule}"
+                                                                                                       ^
+models/trade.rb:42:148: C: Favor format over String#%.
+      print "          #{'%10s' % trade.execution_date.to_s} #{'%-14.14s' % trade.entry_rule} #{'%10s' % trade.liquidation_date.to_s} #{'%-14.14s' % trade.exit_rule}"
+                                                                                                                                                   ^
+models/trade.rb:47:5: C: Use only ascii symbols in comments.
+    # 最終評価
+    ^^^^^^
+models/trade.rb:48:81: C: Line is too long. [97/80]
+    trade_try_count = Trade.where(label: :simulating).where(status: [:liquidate, :expired]).count
+                                                                                ^^^^^^^^^^^^^^^^^
+models/trade.rb:49:81: C: Line is too long. [115/80]
+    plus_trade_count = Trade.where(label: :simulating).where(status: :liquidate).where('valuation_price > 0').count
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+models/trade.rb:50:81: C: Line is too long. [116/80]
+    minus_trade_count = Trade.where(label: :simulating).where(status: :liquidate).where('valuation_price <=0').count
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+models/trade.rb:51:81: C: Line is too long. [133/80]
+    plus_trade_amount = Trade.where(label: :simulating).where(status: :liquidate).where('valuation_price > 0').sum(:valuation_amount)
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+models/trade.rb:52:81: C: Line is too long. [134/80]
+    minus_trade_amount = Trade.where(label: :simulating).where(status: :liquidate).where('valuation_price <=0').sum(:valuation_amount)
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+models/trade.rb:53:81: C: Line is too long. [96/80]
+    average = Trade.where(label: :simulating).where(status: :liquidate).average(:earnings_ratio)
+                                                                                ^^^^^^^^^^^^^^^^
+models/trade.rb:55:22: C: Favor format over String#%.
+    puts "勝ち #{'%3d' % plus_trade_count}回 #{'%10.0f' % plus_trade_amount}円  仕掛け回数 #{'%3d' % trade_try_count}回"
+                     ^
+models/trade.rb:55:54: C: Favor format over String#%.
+    puts "勝ち #{'%3d' % plus_trade_count}回 #{'%10.0f' % plus_trade_amount}円  仕掛け回数 #{'%3d' % trade_try_count}回"
+                                                     ^
+models/trade.rb:55:81: C: Line is too long. [110/80]
+    puts "勝ち #{'%3d' % plus_trade_count}回 #{'%10.0f' % plus_trade_amount}円  仕掛け回数 #{'%3d' % trade_try_count}回"
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+models/trade.rb:55:91: C: Favor format over String#%.
+    puts "勝ち #{'%3d' % plus_trade_count}回 #{'%10.0f' % plus_trade_amount}円  仕掛け回数 #{'%3d' % trade_try_count}回"
+                                                                                          ^
+models/trade.rb:56:22: C: Favor format over String#%.
+    puts "負け #{'%3d' % minus_trade_count}回 #{'%10.0f' % minus_trade_amount}円  勝率 #{'%3.2f' % (plus_trade_count * 1.0 / (plus_trade_count + minus_trade_count) * 100.0)}%"
+                     ^
+models/trade.rb:56:55: C: Favor format over String#%.
+    puts "負け #{'%3d' % minus_trade_count}回 #{'%10.0f' % minus_trade_amount}円  勝率 #{'%3.2f' % (plus_trade_count * 1.0 / (plus_trade_count + minus_trade_count) * 100.0)}%"
+                                                      ^
+models/trade.rb:56:81: C: Line is too long. [169/80]
+    puts "負け #{'%3d' % minus_trade_count}回 #{'%10.0f' % minus_trade_amount}円  勝率 #{'%3.2f' % (plus_trade_count * 1.0 / (plus_trade_count + minus_trade_count) * 100.0)}%"
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+models/trade.rb:56:92: C: Favor format over String#%.
+    puts "負け #{'%3d' % minus_trade_count}回 #{'%10.0f' % minus_trade_amount}円  勝率 #{'%3.2f' % (plus_trade_count * 1.0 / (plus_trade_count + minus_trade_count) * 100.0)}%"
+                                                                                           ^
+models/trade.rb:57:29: C: Favor format over String#%.
+    puts "合計損益   #{'%10.0f' % (plus_trade_amount + minus_trade_amount)}円  平均損益率 #{'%7.2f' % average}%"
+                            ^
+models/trade.rb:57:81: C: Line is too long. [102/80]
+    puts "合計損益   #{'%10.0f' % (plus_trade_amount + minus_trade_amount)}円  平均損益率 #{'%7.2f' % average}%"
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^
+models/trade.rb:57:91: C: Favor format over String#%.
+    puts "合計損益   #{'%10.0f' % (plus_trade_amount + minus_trade_amount)}円  平均損益率 #{'%7.2f' % average}%"
+                                                                                          ^
+rules/rules.rb:3:1: C: Use only ascii symbols in comments.
+# 買い仕掛けルール
+^^^^^^^^^^
+rules/rules.rb:8:81: C: Line is too long. [139/80]
+      return { trade_type: :spot, entry_type: :limit, entry_limit_price: stocks[0].close, entry_expiry: @next_day, entry_size: issue.unit }
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rules/rules.rb:15:81: C: Line is too long. [139/80]
+      return { trade_type: :spot, entry_type: :limit, entry_limit_price: stocks[0].close, entry_expiry: @next_day, entry_size: issue.unit }
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rules/rules.rb:20:1: C: Use only ascii symbols in comments.
+# 売り仕掛けルール
+^^^^^^^^^^
+rules/rules.rb:25:81: C: Line is too long. [149/80]
+      return { trade_type: :margin_selling, entry_type: :limit, entry_limit_price: stocks[0].close, entry_expiry: @next_day, entry_size: issue.unit }
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rules/rules.rb:32:81: C: Line is too long. [149/80]
+      return { trade_type: :margin_selling, entry_type: :limit, entry_limit_price: stocks[0].close, entry_expiry: @next_day, entry_size: issue.unit }
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rules/rules.rb:37:1: C: Use only ascii symbols in comments.
+# 買い手仕舞いルール
+^^^^^^^^^^^
+rules/rules.rb:42:81: C: Line is too long. [160/80]
+      exit_limit_price: trade.execution_price * (1.0 + @p[:limit_percent] / 100.0), exit_stop_price: trade.execution_price * (1.0 - @p[:stop_percent] / 100.0) }
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rules/rules.rb:46:1: C: Use only ascii symbols in comments.
+# 売り手仕舞いルール
+^^^^^^^^^^^
+rules/rules.rb:51:81: C: Line is too long. [160/80]
+      exit_limit_price: trade.execution_price * (1.0 - @p[:limit_percent] / 100.0), exit_stop_price: trade.execution_price * (1.0 + @p[:stop_percent] / 100.0) }
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+spec/spec_helper.rb:84:81: C: Line is too long. [81/80]
+  #   # order dependency and want to debug it, you can fix the order by providing
+                                                                                ^
+spec/spec_helper.rb:91:81: C: Line is too long. [81/80]
+  #   # test failures related to randomization by passing the same `--seed` value
+                                                                                ^
+
+17 files inspected, 156 offenses detected
+Created .rubocop_todo.yml.
+Run `rubocop --config .rubocop_todo.yml`, or
+add inherit_from: .rubocop_todo.yml in a .rubocop.yml file.

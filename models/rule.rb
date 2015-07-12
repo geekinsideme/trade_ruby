@@ -1,5 +1,5 @@
 class Rule
-  def initialize( params )
+  def initialize(params)
     @p = params
     @today = params[:today]
     @next_day = params[:next_day]

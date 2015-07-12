@@ -11,3 +11,7 @@ module Indicator
     take(75).map(&:close).average
   end
 end
+
+class Array
+  include Indicator
+end
